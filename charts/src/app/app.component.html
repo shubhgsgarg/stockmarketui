@@ -1,20 +1,29 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    {{ title }}!
-  </h1>
-  <canvas id="lineChart" width="650" height="200"></canvas>
-</div>
-
-<form [formGroup]="oppoSuitsForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="graphtypeForm" (ngSubmit)="onSubmit()">
 
   <select formControlName="name">
     <option disabled>Select graph type</option>
     <option>Choose graph type</option>
     <option *ngFor="let graph of graphtype">{{graph}}</option>
   </select>
-
+  <select formControlName="number">
+    <option disabled>Select graph number</option>
+      <option>Choose graph number</option>
+      <option selected>1</option>
+      <option >2</option>
+  </select>
   <button>Submit</button>
 </form>
+
+<div style="text-align:center">
+
+  <canvas id="chart1" width="350" height="100"></canvas>
+</div>
+<div  style="text-align:center">
+
+  <canvas id="chart2" width="350" height="100"></canvas>
+</div>
+
+
 
 <router-outlet></router-outlet>

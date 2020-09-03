@@ -9,7 +9,8 @@ import { FormBuilder } from "@angular/forms";
 })
 export class AppComponent implements OnInit {
   title = 'Stock Exchange';
-  LineChart=[];
+  chart1=[];
+  chart2=[];
 
   responses1 = [
     {
@@ -117,7 +118,8 @@ export class AppComponent implements OnInit {
   label1 ="First company/sector";
   label2 ="Second company/sector";
   s1 = new Set();
-  charttype="line";
+  charttype: any;
+  chartnumber: any;
 
 
 
@@ -131,17 +133,27 @@ export class AppComponent implements OnInit {
     this.label2 = company2;
   }
 
-  graphtype: any = ['line', 'bar']
+  graphtype: any = ['line', 'bar'];
 
   constructor(public fb: FormBuilder) { }
 
   graphtypeForm = this.fb.group({
-    name: ['']
+    name: [''],
+    number:[]
   })
 
   onSubmit() {
-    this.charttype = this.graphtypeForm.value;
-    this. createChart();
+    this.charttype = this.graphtypeForm.value.name;
+    this.chartnumber = this.graphtypeForm.value.number;
+    if(this.chartnumber==1){
+      this.chart2= [];
+      console.log(this.chart2);
+      this.createSingleChart();
+    }
+    else{
+      this.createTwoChart();
+    }
+    
   }
 
 
@@ -150,19 +162,14 @@ export class AppComponent implements OnInit {
   {
     this.fillVar();
 
-    this. createChart();
-
-
   }
-  createChart() {
-    this.LineChart = new Chart('lineChart', {
 
+
+  createSingleChart() {
+    this.chart1 = new Chart('chart1', {
       type: this.charttype,
-
       data: {
-
         labels: this.labels,
-
         datasets: [
           {
             label: this.label1,
@@ -192,37 +199,94 @@ export class AppComponent implements OnInit {
             borderColor:"green",
             borderWidth: 1
           }
-        ]
-    
-
+        ]   
       }, 
-
       options: {
-
         title:{
-
           text:"Company comparison",
-
           display:true
-
         },
-
         scales: {
-
           yAxes: [{
-
           ticks: {
-
               beginAtZero:true
-
           }
-
           }]
-
         }
-
       }
+    });
+  }
 
+  createTwoChart() {
+    this.chart1 = new Chart('chart1', {
+      type: this.charttype,
+      data: {
+        labels: this.labels,
+        datasets: [
+          {
+            label: this.label1,
+            fill: false,
+            //fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "red",
+            pointColor: "red",
+            pointStrokeColor: "#fff",
+            //pointHighlightFill: "#fff",
+            //pointHighlightStroke: "rgba(220,220,220,1)",
+            data: this.data1,
+            lineTension:0.2,
+            borderColor:"red",
+            borderWidth: 1
+          },
+        ]   
+      }, 
+      options: {
+        title:{
+          text:"Company comparison",
+          display:true
+        },
+        scales: {
+          yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+          }]
+        }
+      }
+    });
+    this.chart2 = new Chart('chart2', {
+      type: this.charttype,
+      data: {
+        labels: this.labels,
+        datasets: [
+          {
+            label: this.label2,
+            fill: false,
+            //fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "green",
+            pointColor: "green",
+            pointStrokeColor: "#fff",
+            //pointHighlightFill: "#fff",
+            //pointHighlightStroke: "rgba(151,187,205,1)",
+            data: this.data2,
+            lineTension:0.2,
+            borderColor:"green",
+            borderWidth: 1
+          }
+        ]   
+      }, 
+      options: {
+        title:{
+          text:"Company comparison",
+          display:true
+        },
+        scales: {
+          yAxes: [{
+          ticks: {
+              beginAtZero:true
+          }
+          }]
+        }
+      }
     });
   }
 
