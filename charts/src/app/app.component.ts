@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Chart} from 'chart.js'
 import { FormBuilder } from "@angular/forms";
+import {ExportService} from './_services/export.service';
+
 
 @Component({
   selector: 'app-root',
@@ -65,7 +67,7 @@ export class AppComponent implements OnInit {
   responses2 = [
       {
           "companyStockPriceId": 1,
-          "companyCode": 1002,
+          "companyCode": 1003,
           "stockExchange": "nsc",
           "currentPrice": 70.7,
           "date": "2020-01-28",
@@ -73,7 +75,7 @@ export class AppComponent implements OnInit {
       },
       {
           "companyStockPriceId": 2,
-          "companyCode": 1002,
+          "companyCode": 1003,
           "stockExchange": "nsc",
           "currentPrice": 20.7,
           "date": "2020-02-28",
@@ -81,7 +83,7 @@ export class AppComponent implements OnInit {
       },
       {
           "companyStockPriceId": 3,
-          "companyCode": 1002,
+          "companyCode": 1003,
           "stockExchange": "nsc",
           "currentPrice": 45.7,
           "date": "2020-03-03",
@@ -89,7 +91,7 @@ export class AppComponent implements OnInit {
       },
       {
         "companyStockPriceId": 1,
-        "companyCode": 1002,
+        "companyCode": 1003,
         "stockExchange": "nsc",
         "currentPrice": 70.7,
         "date": "2020-04-28",
@@ -97,7 +99,7 @@ export class AppComponent implements OnInit {
     },
     {
         "companyStockPriceId": 2,
-        "companyCode": 1002,
+        "companyCode": 1003,
         "stockExchange": "nsc",
         "currentPrice": 20.7,
         "date": "2020-05-28",
@@ -105,20 +107,22 @@ export class AppComponent implements OnInit {
     },
     {
         "companyStockPriceId": 3,
-        "companyCode": 1002,
+        "companyCode": 1003,
         "stockExchange": "nsc",
         "currentPrice": 45.7,
         "date": "2020-06-03",
         "time": "12:15:00"
     }
   ]
-  labels = [];
-  private data1 = []; 
+  xlabels1 = [];
+  xlabels2 = [];
+  data1 = []; 
   data2 = [];
   label1 ="First company/sector";
   label2 ="Second company/sector";
-  s1 = new Set();
-  charttype: any;
+  avg1=0; 
+  avg2=0;
+  charttype= 'line';
   chartnumber: any;
 
 
@@ -135,7 +139,7 @@ export class AppComponent implements OnInit {
 
   graphtype: any = ['line', 'bar'];
 
-  constructor(public fb: FormBuilder) { }
+  constructor(public fb: FormBuilder, private exportService: ExportService) { }
 
   graphtypeForm = this.fb.group({
     name: [''],
@@ -161,7 +165,7 @@ export class AppComponent implements OnInit {
 
   {
     this.fillVar();
-
+    this.createSingleChart();
   }
 
 
@@ -169,7 +173,7 @@ export class AppComponent implements OnInit {
     this.chart1 = new Chart('chart1', {
       type: this.charttype,
       data: {
-        labels: this.labels,
+        labels: this.xlabels1,
         datasets: [
           {
             label: this.label1,
@@ -203,7 +207,7 @@ export class AppComponent implements OnInit {
       }, 
       options: {
         title:{
-          text:"Company comparison",
+          text:"Comparison Charts",
           display:true
         },
         scales: {
@@ -221,7 +225,7 @@ export class AppComponent implements OnInit {
     this.chart1 = new Chart('chart1', {
       type: this.charttype,
       data: {
-        labels: this.labels,
+        labels: this.xlabels1,
         datasets: [
           {
             label: this.label1,
@@ -256,7 +260,7 @@ export class AppComponent implements OnInit {
     this.chart2 = new Chart('chart2', {
       type: this.charttype,
       data: {
-        labels: this.labels,
+        labels: this.xlabels2,
         datasets: [
           {
             label: this.label2,
@@ -297,16 +301,24 @@ export class AppComponent implements OnInit {
     for (var i=0;i<this.responses1.length;i++) {
         this.data1.push(this.responses1[i].currentPrice);
         this.data2.push(this.responses2[i].currentPrice);
-        this.s1.add(this.responses1[i].date);
+        this.avg1+= this.responses1[i].currentPrice;
+        this.avg2+= this.responses2[i].currentPrice;
+        this.xlabels1.push(this.responses1[i].date);
+        this.xlabels2.push(this.responses2[i].date);
     }
-    
+    this.avg1= this.avg1/this.data1.length;
+    this.avg2= this.avg2/this.data2.length;
 
-    for(let s of this.s1){
-      this.labels.push(s);
-    }
+    // for(let s of this.s1){
+    //   this.xlabels1.push(s);
+    // }
     
   }
 
+  export() {
+    this.exportService.exportExcel(this.responses1, 'Datasheet_'+this.label1);
+    this.exportService.exportExcel(this.responses2, 'Datasheet_'+this.label1);
 
+  }
 
 }
