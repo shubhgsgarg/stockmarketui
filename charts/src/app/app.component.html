@@ -2,20 +2,20 @@
 <form [formGroup]="graphtypeForm" (ngSubmit)="onSubmit()">
 
   <select formControlName="name">
-    <option disabled>Select graph type</option>
-    <option>Choose graph type</option>
-    <option *ngFor="let graph of graphtype">{{graph}}</option>
+    <option disabled selected>Choose graph type</option>
+    <!-- <option *ngFor="let graph of graphtype">{{graph}}</option> -->
+    <option selected>line</option>
+    <option >bar</option>
   </select>
   <select formControlName="number">
-    <option disabled>Select graph number</option>
-      <option>Choose graph number</option>
+      <option disabled >Choose graph number</option>
       <option selected>1</option>
       <option >2</option>
   </select>
   <button>Submit</button>
 </form>
 
-<div class="col-md-3">
+<div >
   <button type="button" 
   (click)="export()" 
   class="btn btn-danger">
